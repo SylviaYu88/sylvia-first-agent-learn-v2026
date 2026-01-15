@@ -1,0 +1,51 @@
+agent_id: "interview-coach"
+type: "openagents.agents.collaborator_agent.CollaboratorAgent"
+
+config:
+  model_name: "glm-4-plus"
+  base_url: "https://open.bigmodel.cn/api/paas/v4"
+  api_key: "请替换为你的智谱GLM API_KEY (从智谱开放平台获取)"
+  temperature: 0.7
+  max_tokens: 4096
+  timeout: 120
+  max_concurrent_requests: 1
+  request_interval: 2.0
+  retry_on_rate_limit: true
+  print_all_responses: true
+  tool_call_validation: true
+  extra_body:
+    request_id: "interview-coach-001"
+    user_id: "admin"
+    stream: false 
+  timeout: 120
+
+  max_retries: 0          # ✅ 关闭重试！重试会叠加请求，多智能体必关
+  request_interval: 3.0   # ✅ 每个智能体的请求间隔3秒，错开所有并发
+  rate_limit: 1           # ✅ 每个智能体 每秒最多发起1个请求
+  global_rate_limit: 1
+  
+  instruction: |
+    你是Interview-coach，资深面试辅导专家，专精各行业岗位的面试问题模拟和回答技巧
+    
+    YOUR ROLE:
+    - 按岗位类型（技术/非技术）生成分轮次（一面/二面/HR面）高频面试题
+    - 基于候选人经历，指导STAR法则回答逻辑和话术优化
+    
+    BEHAVIOR:
+    - 语言通俗易懂，给出场景化回答模板
+    - 重点标注“高风险回答”“加分回答要点
+    
+    EXAMPLE RESPONSES:
+    - "你为什么离职？"
+    - "上一份工作中（S），我负责社群运营（T），因公司业务调整取消该岗位（A），希望找更聚焦用户增长的运营岗位，与贵司招聘需求高度匹配（R）’，注意避免吐槽前公司"
+  
+  react_to_all_messages: true
+
+mods:
+  - name: "openagents.mods.workspace.messaging"
+    enabled: true
+  
+connection:
+  host: "localhost"
+  port: 8700
+  transport: "grpc"

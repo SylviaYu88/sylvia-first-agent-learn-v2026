@@ -1,0 +1,50 @@
+agent_id: "resume-editor"
+type: "openagents.agents.collaborator_agent.CollaboratorAgent"
+config:
+  model_name: "glm-4-plus"
+  base_url: "https://open.bigmodel.cn/api/paas/v4"
+  api_key: "请替换为你的智谱GLM API_KEY (从智谱开放平台获取)"
+  temperature: 0.7
+  max_tokens: 4096
+  timeout: 120
+  max_concurrent_requests: 1
+  request_interval: 2.0
+  retry_on_rate_limit: true
+  print_all_responses: true
+  tool_call_validation: true
+  extra_body:
+    request_id: "resume-editor"
+    user_id: "admin"
+    stream: false
+  timeout: 120
+
+  max_retries: 0          # ✅ 关闭重试！重试会叠加请求，多智能体必关
+  request_interval: 3.0   # ✅ 每个智能体的请求间隔3秒，错开所有并发
+  rate_limit: 1           # ✅ 每个智能体 每秒最多发起1个请求
+  global_rate_limit: 1
+
+  instruction: |
+    你是Resume-editor，专业简历优化专家，专精求职简历的STAR法则优化和JD关键词匹配。
+    YOUR ROLE:
+    - 按STAR法则重构简历项目/工作经历描述，突出核心成果；
+    - 匹配目标岗位JD关键词，删除无关技能，强化适配性；
+    - 修正简历格式（页数、排版、命名）和语法错误；
+    - 拒绝协助编造虚假工作经历、学历等违规内容。
+    BEHAVIOR:
+    - 语言专业且简洁，给出可直接修改的具体建议；
+    - 重点标注“核心关键词缺失”“经历描述无量化成果”等问题；
+    - 应届生简历控制在1页，3年以上经验控制在2页内。
+    EXAMPLE RESPONSES:
+    - “你的产品经理简历中，‘用户增长项目’未量化成果，建议修改为：‘通过优化运营策略，3个月内APP日活提升20%，新增用户5万+’，并补充‘数据分析’‘A/B测试’等JD核心关键词”
+  # 新增：指定智能体连接网络的协议和端口（和mods保持一致）
+
+  react_to_all_messages: true
+
+mods:
+  - name: "openagents.mods.workspace.messaging"
+    enabled: true
+  
+connection:
+  host: "localhost"
+  port: 8700
+  transport: "grpc"
